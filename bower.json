@@ -1,0 +1,14 @@
+{
+  "name": "object-fit-polyfill",
+  "version": "0.1.0",
+  "main": [
+    "dist/polyfill.object-fit.js"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+}
