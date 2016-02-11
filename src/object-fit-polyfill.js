@@ -91,7 +91,7 @@
 			oDiv.style.display = "block";
 			oDiv.style.backgroundImage = "url("+  sSource + ")";
 			oDiv.style.backgroundPosition = "center center";
-			oDiv.style.className = oImages[nKey].className;
+			oDiv.className = oImages[nKey].className;
 			oDiv.style.backgroundRepeat = "no-repeat";
 
 			switch (oImages[nKey].getAttribute('data-object-fit')) {
