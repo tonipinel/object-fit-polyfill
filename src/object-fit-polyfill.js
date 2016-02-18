@@ -98,7 +98,7 @@
 				} else if ( oImages[nKey].getAttribute('data-src')) {
 					sSource = oImages[nKey].getAttribute('data-src');
 				} else {
-					sSource = oImages[nKey].src;
+					sSource = oImages[nKey].currentSrc || oImages[nKey].src;
 				}
 
 				copyComputedStyle( oImages[nKey], oDiv );
