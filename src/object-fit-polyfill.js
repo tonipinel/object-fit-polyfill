@@ -5,7 +5,20 @@
  *
  */
 
-;(function (window, document) {
+;(function (root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD. Register as an anonymous module.
+		define([], factory);
+	} else if (typeof module === 'object' && module.exports) {
+		// Node. Does not work with strict CommonJS, but
+		// only CommonJS-like environments that support module.exports,
+		// like Node.
+		module.exports = factory();
+	} else {
+		// Browser globals (root is window)
+		root.objectFitPolyfill = factory();
+  }
+}(this, function () {
 	'use strict';
 
 	var supports = function (){
@@ -69,49 +82,55 @@
 
 	};
 
-	if ( supports('object-fit') === false ) {
+	var init = function() {
 
-		var oImages = document.querySelectorAll('[data-object-fit]'),
-			oDiv, sSource;
+		if ( supports('object-fit') === false ) {
 
-		for ( var nKey = 0; nKey < oImages.length; nKey++ ) {
+			var oImages = document.querySelectorAll('[data-object-fit]'),
+				oDiv, sSource;
 
-			oDiv = document.createElement('div');
+			for ( var nKey = 0; nKey < oImages.length; nKey++ ) {
 
-			if (oImages[nKey].getAttribute('data-src-retina')) {
-				sSource = oImages[nKey].getAttribute('data-src-retina');
-			} else if ( oImages[nKey].getAttribute('data-src')) {
-				sSource = oImages[nKey].getAttribute('data-src');
-			} else {
-				sSource = oImages[nKey].src;
+				oDiv = document.createElement('div');
+
+				if (oImages[nKey].getAttribute('data-src-retina')) {
+					sSource = oImages[nKey].getAttribute('data-src-retina');
+				} else if ( oImages[nKey].getAttribute('data-src')) {
+					sSource = oImages[nKey].getAttribute('data-src');
+				} else {
+					sSource = oImages[nKey].currentSrc || oImages[nKey].src;
+				}
+
+				copyComputedStyle( oImages[nKey], oDiv );
+
+				oDiv.style.display = "block";
+				oDiv.style.backgroundImage = "url("+  sSource + ")";
+				oDiv.style.backgroundPosition = "center center";
+				oDiv.className = oImages[nKey].className;
+				oDiv.style.backgroundRepeat = "no-repeat";
+
+				switch (oImages[nKey].getAttribute('data-object-fit')) {
+					case "cover":
+						oDiv.style.backgroundSize = "cover";
+						break;
+					case "contain":
+						oDiv.style.backgroundSize = "contain";
+						break;
+					case "fill":
+						oDiv.style.backgroundSize = "100% 100%";
+						break;
+					case "none":
+						oDiv.style.backgroundSize = "auto";
+						break;
+				}
+
+				oImages[nKey].parentNode.replaceChild( oDiv, oImages[nKey]);
 			}
 
-			copyComputedStyle( oImages[nKey], oDiv );
-
-			oDiv.style.display = "block";
-			oDiv.style.backgroundImage = "url("+  sSource + ")";
-			oDiv.style.backgroundPosition = "center center";
-			oDiv.style.className = oImages[nKey].className;
-			oDiv.style.backgroundRepeat = "no-repeat";
-
-			switch (oImages[nKey].getAttribute('data-object-fit')) {
-				case "cover":
-					oDiv.style.backgroundSize = "cover";
-					break;
-				case "contain":
-					oDiv.style.backgroundSize = "contain";
-					break;
-				case "fill":
-					oDiv.style.backgroundSize = "100% 100%";
-					break;
-				case "none":
-					oDiv.style.backgroundSize = "auto";
-					break;
-			}
-
-			oImages[nKey].parentNode.replaceChild( oDiv, oImages[nKey]);
 		}
 
 	}
 
-})(window, document);
+	return { init: init };
+
+}));
