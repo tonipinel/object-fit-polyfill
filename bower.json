@@ -2,7 +2,7 @@
   "name": "object-fit-polyfill",
   "version": "0.1.0",
   "main": [
-    "dist/polyfill.object-fit.js"
+    "dist/object-fit-polyfill.js"
   ],
   "ignore": [
     "**/.*",
